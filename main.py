@@ -3,14 +3,6 @@ from api_data import get_coin_data, get_coinbase_data, sell_quote
 
 def main():
     current_balance_usd, original_balance_usd, transaction_ids, current_balance_crypto = get_coinbase_data()
-    # Compare current and orginal show percent difference and show profits or loss
-    # Determine if it is a selling or buying price
-    # Also parse coin data to show percent change in current market
-    # Figure out database storage - what to store and fix coinbase data extraction
-    # It will store the latest transaction data of each currency - if it is the same as before it will not loop through api call
-    # it will rather extract data stored in database.
-    # If the transactoin is different it will take what is already stored in database and then add newer transactions and store in database
-
 
     profit_loss = sell_quote(current_balance_crypto, transaction_ids)
 
