@@ -1,12 +1,13 @@
 from urllib.parse import quote
 from requests import Request, Session
-from apikey import apikey, coinbase, coinbase_secret, crypto_compare
+from apikey import apikey, coinbase, coinbase_secret, crypto_compare, pushover, pushover_app
 import json
 from requests.exceptions import ConnectionError, Timeout, TooManyRedirects
 from coinbase.wallet.client import Client
 import re
+import http.client, urllib
 
-def get_coin_data():
+def get_coin_data(symbols):
 
     url = 'https://pro-api.coinmarketcap.com/v1/cryptocurrency/quotes/latest'
 
@@ -15,15 +16,18 @@ def get_coin_data():
         'X-CMC_PRO_API_KEY': apikey
     }
     parameters = {
-        'slug': 'bitcoin',
+        'symbol': symbols,
         'convert': 'USD'
     }
     session = Session()
     session.headers.update(headers)
 
+    
+
     try:
         response = session.get(url, params=parameters)
         data = json.loads(response.text)
+        return data
         
     except (ConnectionError, Timeout, TooManyRedirects) as e:
         print(e)
@@ -120,6 +124,16 @@ def sell_quote(current_balance_crypto, transaction_ids):
         total_proft_loss[keys] = sell['total']['amount']
         
     return total_proft_loss
+
+def pushover_notifications():
+    conn = http.client.HTTPSConnection("api.pushover.net:443")
+    conn.request("POST", "/1/messages.json",
+    urllib.parse.urlencode({
+        "token": pushover,
+        "user": pushover_app,
+        "message": "hello world",
+    }), { "Content-type": "application/x-www-form-urlencoded" })
+    conn.getresponse()
     
 
 
