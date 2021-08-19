@@ -1,6 +1,6 @@
 from urllib.parse import quote
 from requests import Request, Session
-from apikey import apikey, coinbase, coinbase_secret, crypto_compare, pushover, pushover_app
+from apikey import apikey, coinbase, coinbase_secret, crypto_compare, pushover_user, pushover_app
 import json
 from requests.exceptions import ConnectionError, Timeout, TooManyRedirects
 from coinbase.wallet.client import Client
@@ -125,13 +125,13 @@ def sell_quote(current_balance_crypto, transaction_ids):
         
     return total_proft_loss
 
-def pushover_notifications():
+def pushover_notifications(message):
     conn = http.client.HTTPSConnection("api.pushover.net:443")
     conn.request("POST", "/1/messages.json",
     urllib.parse.urlencode({
-        "token": pushover,
-        "user": pushover_app,
-        "message": "hello world",
+        "token": pushover_app,
+        "user": pushover_user,
+        "message": message,
     }), { "Content-type": "application/x-www-form-urlencoded" })
     conn.getresponse()
     
