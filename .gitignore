@@ -2,3 +2,4 @@
 venv/
 apikey.py
 .vscode/
+__pycache__
