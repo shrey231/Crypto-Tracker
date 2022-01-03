@@ -10,4 +10,4 @@ RUN pip install -r requirements.txt
 
 RUN crontab crontab
 
-CMD ["crond", "-f"]
+CMD ["cron", "-f"]
