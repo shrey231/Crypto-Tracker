@@ -1,6 +1,5 @@
-import requests
 from api_data import get_coin_data, get_coinbase_data, sell_quote, pushover_notifications
-import numpy as np
+
 
 def main():
     current_balance_usd, original_balance_usd, transaction_ids, current_balance_crypto = get_coinbase_data()
@@ -9,7 +8,7 @@ def main():
 
     for keys in transaction_ids.keys():
         currency_symbols.append(keys.replace(' Wallet',''))
-
+    print(current_balance_crypto)
     profit_loss = sell_quote(current_balance_crypto, transaction_ids)
     net, percent_change, portfolio_total = buy_or_sell_calculator(profit_loss,original_balance_usd)
 
@@ -63,8 +62,6 @@ def buy_or_sell_calculator(profit_loss, original_balance_usd):
         percent_change[key_profit] = ((net[key_profit]) / original_balance_usd[key_original]) * 100
 
     return (net, percent_change, portfolio_total)
-
-
 
 main()
 

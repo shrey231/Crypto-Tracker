@@ -48,9 +48,11 @@ def get_coinbase_data():
             transaction_ids[str(wallet['name'])] = str(wallet['id'])
             value = str( wallet['native_balance']).replace('USD','')
             total += float(value)
-    del transaction_ids['COMP Wallet']
-    del transaction_ids['GRT Wallet']
-
+    try:
+        del transaction_ids['COMP Wallet']
+        del transaction_ids['GRT Wallet']
+    except:
+        pass
     bought_balance_crypto = {}
     price_conversion_list = []
     original_crypto_usd = {}
@@ -59,12 +61,13 @@ def get_coinbase_data():
         price_conversion_list.append(key.replace(' Wallet',''))
         for i in range(len(transaction_total['data']) - 1, -1, -1):
             try:
+                
                 if transaction_total[i]['details']['header'][0:4] == 'Sold':
                     proportion = float(bought_balance_crypto.get(key)) // float(transaction_total[i]['amount']['amount'])
                     bought_balance_crypto[key] = float(transaction_total[i]['amount']['amount']) + float(bought_balance_crypto.get(key))
                     original_crypto_usd[key] = original_crypto_usd[key] - (original_crypto_usd[key] * (abs(1/proportion)))
                    
-                elif transaction_total[i]['details']['header'][0:6] == 'Bought' or transaction_total[i]['details']['header'][0:8] == 'Received':
+                elif transaction_total[i]['details']['header'][0:6] == 'Bought' or transaction_total[i]['details']['header'][0:8] == 'Received' or transaction_total[i]['details']['header'][0:9] == 'Converted':
                     bought_balance_crypto[key] = float(transaction_total[i]['amount']['amount']) + float(bought_balance_crypto.get(key))
                     temp = transaction_total[i]['details']['header']
 
@@ -116,6 +119,7 @@ def sell_quote(current_balance_crypto, transaction_ids):
 
     total_proft_loss = {}
     sell_price = {}
+
     for keys in  transaction_ids.keys():
         sell = client.sell(transaction_ids[keys],
                    amount=current_balance_crypto[keys],
